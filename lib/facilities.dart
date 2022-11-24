@@ -72,11 +72,13 @@ class _FacilityPageState extends State<FacilityPage> {
                                             .refFromURL(document['image'])
                                             .getDownloadURL(),
                                         builder: ((context, snapshot) {
+                                          print(snapshot);
                                           if (snapshot.hasData) {
                                             return Image.network(
                                                 snapshot.data!);
                                           } else {
-                                            return SizedBox();
+                                            return SizedBox(
+                                                child: Text('Loading...'));
                                           }
                                         })),
                                   )
