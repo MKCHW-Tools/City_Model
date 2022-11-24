@@ -5,7 +5,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:myapp/login.dart';
 
-
 class MenuPage extends StatefulWidget {
   const MenuPage(this.facilityDocument);
   final DocumentSnapshot facilityDocument;
@@ -20,17 +19,23 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext) {
     return Scaffold(
-        appBar:
-            AppBar(title: Text("${widget.facilityDocument['name']}'s Page")),
-        body: Column(
+      appBar: AppBar(title: Text("${widget.facilityDocument['name']}'s Page")),
+      body: Center(
+        child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(8),
-              child: Text(widget.facilityDocument['description']),
+              child: Text(
+                widget.facilityDocument['description'],
+                style: TextStyle(fontSize: 25),
+              ),
             ),
             Container(
               padding: EdgeInsets.all(8),
-              child: Text('Menu'),
+              child: Text(
+                'Menu',
+                style: TextStyle(fontSize: 20),
+              ),
             ),
             Expanded(
                 child: FutureBuilder<QuerySnapshot>(
@@ -46,62 +51,69 @@ class _MenuPageState extends State<MenuPage> {
                   final List<DocumentSnapshot> documents = snapshot.data!.docs;
                   return ListView(
                     children: documents.map((document) {
-                      return Card(
-                        child:
-                            Column(mainAxisSize: MainAxisSize.min, children: [
-                          ListTile(
-                            leading: Icon(Icons.assignment),
-                            title: Text(document['title']),
-                            subtitle: Text(document['description']),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                  child: Row(
+                      return Container(
+                          width: 400,
+                          child: Card(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 100, vertical: 10),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('price: ${document['price']}UGX')
-                                ],
-                              )),
-                              TextButton(
-                                child: Text('Call Now'),
-                                onPressed: () async {
-                                  await FirebaseAnalytics.instance
-                                      .logSelectContent(
-                                          contentType: 'menu',
-                                          itemId: document.id);
+                                  ListTile(
+                                    leading: Icon(Icons.assignment),
+                                    title: Text(document['title']),
+                                    subtitle: Text(document['description']),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                          child: Row(
+                                        children: [
+                                          Text('price: ${document['price']}UGX')
+                                        ],
+                                      )),
+                                      TextButton(
+                                        child: Text('Call Now'),
+                                        onPressed: () async {
+                                          await FirebaseAnalytics.instance
+                                              .logSelectContent(
+                                                  contentType: 'menu',
+                                                  itemId: document.id);
 
-                                  // await FirebaseFirestore.instance.collection('appointments').doc().set({
-                                  //   "patient_id": 'skPcbnA1eodQIX5OxEBQ1ZD35aq2',
-                                  //   "datetime": Timestamp.now(),
-                                  //   "facility_id": widget.facilityDocument.id,
-                                  //   "menu_id": document.id,
-                                  //   "status": "Pending",
-                                  //   "created_at": Timestamp.now(),
-                                  // }).onError((e, _) => print("Error writing document: $e"));
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) {
-                                      // 引数からユーザー情報を渡す
-                                      return LoginPage(document.id,
-                                          widget.facilityDocument.id);
-                                    }),
-                                  );
+                                          // await FirebaseFirestore.instance.collection('appointments').doc().set({
+                                          //   "patient_id": 'skPcbnA1eodQIX5OxEBQ1ZD35aq2',
+                                          //   "datetime": Timestamp.now(),
+                                          //   "facility_id": widget.facilityDocument.id,
+                                          //   "menu_id": document.id,
+                                          //   "status": "Pending",
+                                          //   "created_at": Timestamp.now(),
+                                          // }).onError((e, _) => print("Error writing document: $e"));
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              // 引数からユーザー情報を渡す
+                                              return LoginPage(document.id,
+                                                  widget.facilityDocument.id);
+                                            }),
+                                          );
 
-                                  // FirebaseFirestore.instance.collection('appointments').doc().set({
-                                  //   "patiend_id": widget.uid,
-                                  //   "datetime": Timestamp.now(),
-                                  //   "facility_id": widget.facilityDocument.id,
-                                  //   "menu_id": document.id,
-                                  //   "status": "Pending",
-                                  // }).onError((e, _) => print("Error writing document: $e"));
-                                  // await FirebaseAnalytics.instance.logSelectContent(contentType: 'menu', itemId: document.id);
-                                  // _reserveNotification();
-                                },
-                              ),
-                            ],
-                          )
-                        ]),
-                      );
+                                          // FirebaseFirestore.instance.collection('appointments').doc().set({
+                                          //   "patiend_id": widget.uid,
+                                          //   "datetime": Timestamp.now(),
+                                          //   "facility_id": widget.facilityDocument.id,
+                                          //   "menu_id": document.id,
+                                          //   "status": "Pending",
+                                          // }).onError((e, _) => print("Error writing document: $e"));
+                                          // await FirebaseAnalytics.instance.logSelectContent(contentType: 'menu', itemId: document.id);
+                                          // _reserveNotification();
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                ]),
+                          ));
                     }).toList(),
                   );
                 }
@@ -111,7 +123,9 @@ class _MenuPageState extends State<MenuPage> {
               },
             )),
           ],
-        ));
+        ),
+      ),
+    );
   }
 
   _reserveNotification() {
