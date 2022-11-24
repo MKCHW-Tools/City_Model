@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "538665673190",
+    "project_id": "mobiklinic-city-demo",
+    "storage_bucket": "mobiklinic-city-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538665673190:android:ca713aa50b5445a4833627",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538665673190-ep5et0a3sk6l05c8b2eruug08h3ljhgd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiuknmt664MSzGo19nVKU4duFNdd4AS8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538665673190-ep5et0a3sk6l05c8b2eruug08h3ljhgd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
