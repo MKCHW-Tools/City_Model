@@ -27,11 +27,20 @@ class _FacilityPageState extends State<FacilityPage> {
         body: Column(
           children: [
             Container(
+              margin: EdgeInsets.fromLTRB(100, 10, 100, 0),
               padding: EdgeInsets.all(8),
-              child: Text(
-                'Facilities',
-                style: TextStyle(fontSize: 25),
-              ),
+              child: FutureBuilder<String>(
+                  future: FirebaseStorage.instance
+                      .refFromURL("gs://mobiklinic-city-demo.appspot.com/top.png")
+                      .getDownloadURL(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Image.network(
+                          snapshot.data!);
+                    } else {
+                      return SizedBox();
+                    }
+                  }))
             ),
             Expanded(
               // FutureBuilder
@@ -49,8 +58,6 @@ class _FacilityPageState extends State<FacilityPage> {
                     // 取得した投稿メッセージ一覧を元にリスト表示
                     return ListView(
                       children: documents.map((document) {
-                        print(document['services']);
-                        print(document['ratings']['average']);
                         return Card(
                             margin: EdgeInsets.symmetric(
                                 horizontal: 100, vertical: 10),
@@ -59,7 +66,6 @@ class _FacilityPageState extends State<FacilityPage> {
                               children: [
                                 ListTile(
                                   leading: Container(
-                                      // padding: const EdgeInsets.all(32),
                                       child: Container(
                                     child: FutureBuilder<String>(
                                         future: FirebaseStorage.instance
@@ -101,6 +107,7 @@ class _FacilityPageState extends State<FacilityPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
+                                      padding: EdgeInsets.only(left: 8.0),
                                       child: Row(
                                           children: <Widget>[
                                                 Container(
@@ -125,7 +132,7 @@ class _FacilityPageState extends State<FacilityPage> {
                                               }).toList()),
                                     ),
                                     TextButton(
-                                      child: const Text('Look Menu'),
+                                      child: const Text('Look Menu →'),
                                       onPressed: () async {
                                         await FirebaseAnalytics.instance
                                             .logSelectContent(

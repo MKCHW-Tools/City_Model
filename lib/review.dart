@@ -31,7 +31,7 @@ class _ReviewPageState extends State<ReviewPage>{
         Container(padding: EdgeInsets.all(8), child: Text('Please review the service')),
         Expanded(child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance.collection('appointments').doc(widget.appointmentId).get(),
-          builder: (context, snapshot){
+          builder: (context, snapshot) {
             if (snapshot.hasData){
               final  document = snapshot.data!.data();
               return Column(children: [
