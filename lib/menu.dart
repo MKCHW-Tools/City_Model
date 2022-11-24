@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:myapp/login.dart';
 
@@ -23,6 +24,20 @@ class _MenuPageState extends State<MenuPage> {
       body: Center(
         child: Column(
           children: [
+            Container(height: 10),
+            Container(
+              child: FutureBuilder<String>(
+                  future: FirebaseStorage.instance
+                      .refFromURL(widget.facilityDocument['image'])
+                      .getDownloadURL(),
+                  builder: (((context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Image.network(snapshot.data!);
+                    } else {
+                      return SizedBox(child: Text('Loading...'));
+                    }
+                  }))),
+            ),
             Container(
               padding: EdgeInsets.all(8),
               child: Text(

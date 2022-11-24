@@ -13,7 +13,7 @@ class FirebaseAuthentication {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
       ConfirmationResult confirmationResult = await auth.signInWithPhoneNumber(
-        '+256 $phoneNumber',
+        '+$phoneNumber',
       );
       printMessage("OTP Sent to +256 $phoneNumber");
 
@@ -31,17 +31,17 @@ class FirebaseAuthentication {
       await FirebaseAnalytics.instance.logLogin(loginMethod: "phone");
       userCredential.additionalUserInfo!.isNewUser
           ? await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) {
-          // 引数からユーザー情報を渡す
-          return SignupPage(userCredential, facilityId, menuId);
-        }),
-      )
+              MaterialPageRoute(builder: (context) {
+                // 引数からユーザー情報を渡す
+                return SignupPage(userCredential, facilityId, menuId);
+              }),
+            )
           : await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) {
-          // 引数からユーザー情報を渡す
-          return SignupPage(userCredential, facilityId, menuId);
-        }),
-      );
+              MaterialPageRoute(builder: (context) {
+                // 引数からユーザー情報を渡す
+                return SignupPage(userCredential, facilityId, menuId);
+              }),
+            );
     } catch (e) {
       print('login failed');
     }
