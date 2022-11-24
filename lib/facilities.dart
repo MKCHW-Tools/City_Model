@@ -1,31 +1,28 @@
 import 'dart:html';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'main.dart';
-import 'menu.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class FacilityPage extends StatefulWidget{
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+
+import 'package:myapp/menu.dart';
+
+class FacilityPage extends StatefulWidget {
   const FacilityPage();
   // final String userName;
   // final String uid;
   @override
 
-  State<FacilityPage> createState() => _FacilityaPageState();
+  State<FacilityPage> createState() => _FacilityPageState();
 }
 
-class _FacilityaPageState extends State<FacilityPage>{
+class _FacilityPageState extends State<FacilityPage> {
   String temp = "";
-  // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   @override
 
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('MobiKlinic City Model Demo')),
       body:
@@ -51,7 +48,7 @@ class _FacilityaPageState extends State<FacilityPage>{
                   return ListView(
                     children: documents.map((document) {
                       print(document['services']);
-                       print(document['ratings']['average']);
+                      print(document['ratings']['average']);
                       return Card(
                         child: 
                         Column(mainAxisSize: MainAxisSize.min,
