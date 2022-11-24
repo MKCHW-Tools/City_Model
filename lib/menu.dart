@@ -24,8 +24,16 @@ class _MenuPageState extends State<MenuPage> {
       body: Center(
         child: Column(
           children: [
-            Container(height: 10),
+            Container(height: 15),
             Container(
+              padding: EdgeInsets.all(8),
+              child: Text(
+                widget.facilityDocument['description'],
+                style: TextStyle(fontSize: 22),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 4, 0, 18),
               child: FutureBuilder<String>(
                   future: FirebaseStorage.instance
                       .refFromURL(widget.facilityDocument['image'])
@@ -41,15 +49,8 @@ class _MenuPageState extends State<MenuPage> {
             Container(
               padding: EdgeInsets.all(8),
               child: Text(
-                widget.facilityDocument['description'],
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Text(
                 'Menu',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 24),
               ),
             ),
             Expanded(

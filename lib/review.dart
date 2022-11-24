@@ -24,18 +24,20 @@ class _ReviewPageState extends State<ReviewPage>{
 
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(title: Text('Review Page')),      
+      appBar: AppBar(title: Text('Please review the service')),
       body: 
       Center(child:Container(width: 400,child: Column(
         children: [
-        Container(padding: EdgeInsets.all(8), child: Text('Please review the service')),
         Expanded(child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance.collection('appointments').doc(widget.appointmentId).get(),
           builder: (context, snapshot) {
             if (snapshot.hasData){
-              final  document = snapshot.data!.data();
+              final document = snapshot.data!.data();
               return Column(children: [
-                Container(padding: EdgeInsets.all(8),child: Text('rating')),
+                Container(
+                    padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
+                    child: Text('Your rating', style: TextStyle(fontSize: 18))
+                ),
                 RatingBar.builder(
                 initialRating: 3,
                 minRating: 1,
@@ -51,14 +53,17 @@ class _ReviewPageState extends State<ReviewPage>{
                 rate = rating;
                 },
                   ),
-              TextField(
-                  decoration: InputDecoration(labelText: 'Discribe your rating'),
-                  keyboardType: TextInputType.multiline,
-                    minLines: 1, 
-                    maxLines: 10, 
-                    onChanged: (value) {
-                      description = value;
-                    },
+              Container(
+                margin: EdgeInsets.only(top: 10, bottom: 12),
+                child: TextField(
+                    decoration: InputDecoration(labelText: 'Discribe your rating'),
+                    keyboardType: TextInputType.multiline,
+                      minLines: 1,
+                      maxLines: 10,
+                      onChanged: (value) {
+                        description = value;
+                      },
+                ),
               ),
               ElevatedButton(onPressed: ()async{
                 var document;
@@ -72,7 +77,7 @@ class _ReviewPageState extends State<ReviewPage>{
                 print('upload completed');
                 await FirebaseAnalytics.instance.logSelectContent(contentType: 'menu', itemId: document.id);
                 _ratingNotification();
-              }, child: Text('submit'))
+              }, child: Text('Submit'))
 
 
               ],);
@@ -97,8 +102,9 @@ class _ReviewPageState extends State<ReviewPage>{
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
-          child: const Text("close"),
+          child: const Text("Close"),
         )
       ],
     ),

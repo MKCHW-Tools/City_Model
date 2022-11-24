@@ -72,7 +72,8 @@ class _SignupPageState extends State<SignupPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
+              Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);
             },
             child: const Text("Close"),
           )
