@@ -24,8 +24,16 @@ class _MenuPageState extends State<MenuPage> {
       body: Center(
         child: Column(
           children: [
-            Container(height: 10),
+            Container(height: 15),
             Container(
+              padding: EdgeInsets.all(8),
+              child: Text(
+                widget.facilityDocument['description'],
+                style: TextStyle(fontSize: 22),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 4, 0, 18),
               child: FutureBuilder<String>(
                   future: FirebaseStorage.instance
                       .refFromURL(widget.facilityDocument['image'])
@@ -41,15 +49,8 @@ class _MenuPageState extends State<MenuPage> {
             Container(
               padding: EdgeInsets.all(8),
               child: Text(
-                widget.facilityDocument['description'],
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Text(
                 'Menu',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 24),
               ),
             ),
             Expanded(
@@ -75,7 +76,10 @@ class _MenuPageState extends State<MenuPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   ListTile(
-                                    leading: Icon(Icons.assignment),
+                                    leading: Container(
+                                      margin: EdgeInsets.only(left: 10, top: 6),
+                                      child: Icon(Icons.assignment)
+                                    ),
                                     title: Text(document['title']),
                                     subtitle: Text(document['description']),
                                   ),
@@ -86,25 +90,20 @@ class _MenuPageState extends State<MenuPage> {
                                       Container(
                                           child: Row(
                                         children: [
-                                          Text('price: ${document['price']}UGX')
+                                          Container(
+                                            margin: EdgeInsets.only(left: 14),
+                                            child: Text('Price: ${document['price']} UGX')
+                                          )
                                         ],
                                       )),
                                       TextButton(
-                                        child: Text('Call Now'),
+                                        child: Text('Call Now →'),
                                         onPressed: () async {
                                           await FirebaseAnalytics.instance
                                               .logSelectContent(
                                                   contentType: 'menu',
                                                   itemId: document.id);
 
-                                          // await FirebaseFirestore.instance.collection('appointments').doc().set({
-                                          //   "patient_id": 'skPcbnA1eodQIX5OxEBQ1ZD35aq2',
-                                          //   "datetime": Timestamp.now(),
-                                          //   "facility_id": widget.facilityDocument.id,
-                                          //   "menu_id": document.id,
-                                          //   "status": "Pending",
-                                          //   "created_at": Timestamp.now(),
-                                          // }).onError((e, _) => print("Error writing document: $e"));
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) {
@@ -114,15 +113,6 @@ class _MenuPageState extends State<MenuPage> {
                                             }),
                                           );
 
-                                          // FirebaseFirestore.instance.collection('appointments').doc().set({
-                                          //   "patiend_id": widget.uid,
-                                          //   "datetime": Timestamp.now(),
-                                          //   "facility_id": widget.facilityDocument.id,
-                                          //   "menu_id": document.id,
-                                          //   "status": "Pending",
-                                          // }).onError((e, _) => print("Error writing document: $e"));
-                                          // await FirebaseAnalytics.instance.logSelectContent(contentType: 'menu', itemId: document.id);
-                                          // _reserveNotification();
                                         },
                                       ),
                                     ],

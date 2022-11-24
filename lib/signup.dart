@@ -22,15 +22,15 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('city model demo')),
+        appBar: AppBar(title: Text('Sign in')),
         body: Center(
             child: Container(
           width: 400,
           height: 300,
           child: Column(
             children: [
-              Text('register'),
-              buildTxtField('name', _name, context),
+              Text('Please input your name to make an appointment'),
+              buildTxtField('Name', _name, context),
               buildRegisterButton('Reserve')
             ],
           ),
@@ -72,9 +72,10 @@ class _SignupPageState extends State<SignupPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
+              Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);
             },
-            child: const Text("close"),
+            child: const Text("Close"),
           )
         ],
       ),

@@ -34,6 +34,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Map<int, Color> color = {
+       50: Color.fromRGBO(0x1E, 0x1E, 0x1E, .1),
+      100: Color.fromRGBO(0x1E, 0x1E, 0x1E, .2),
+      200: Color.fromRGBO(0x1E, 0x1E, 0x1E, .3),
+      300: Color.fromRGBO(0x1E, 0x1E, 0x1E, .4),
+      400: Color.fromRGBO(0x1E, 0x1E, 0x1E, .5),
+      500: Color.fromRGBO(0x1E, 0x1E, 0x1E, .6),
+      600: Color.fromRGBO(0x1E, 0x1E, 0x1E, .7),
+      700: Color.fromRGBO(0x1E, 0x1E, 0x1E, .8),
+      800: Color.fromRGBO(0x1E, 0x1E, 0x1E, .9),
+      900: Color.fromRGBO(0x1E, 0x1E, 0x1E,  1),
+    };
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -46,7 +59,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: MaterialColor(0xFF1E1E1E, color),
       ),
       initialRoute: '/',
       routes: {
@@ -55,10 +68,8 @@ class MyApp extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         final uri = Uri.parse(settings.name!);
-        print(uri.path);
         if (uri.path == "/review") {
           final appointmentId = uri.queryParameters['appointmentId'];
-          print(appointmentId);
           return MaterialPageRoute(builder: (context) {
             return ReviewPage(appointmentId!);
           });

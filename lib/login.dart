@@ -33,19 +33,19 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign-in for call')),
+      appBar: AppBar(title: Text('Sign in')),
       body: Center(
           child: Container(
             width: 400,
             height: 300,
             child: Column(
               children: [
-                Text('Sign-in'),
+                Text('Please sign in to make an appointment'),
                 // const SizedBox(height: 8),
                 // Text('phone number'),
-                buildTextField('phone number', _phone, Icons.phone, context),
+                buildTextField('Phone number', _phone, Icons.phone, context),
                 login
-                    ? buildTextField('password', _otp, Icons.timer, context)
+                    ? buildTextField('Password', _otp, Icons.timer, context)
                     : const SizedBox(),
                 login
                     ? buildSubmitButton('Login')
