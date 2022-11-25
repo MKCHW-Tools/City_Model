@@ -6,7 +6,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class SignupPage extends StatefulWidget {
   const SignupPage(this.userCredential, this.facilityId, this.menuId);
   final UserCredential userCredential;
@@ -73,7 +72,8 @@ class _SignupPageState extends State<SignupPage> {
           TextButton(
             onPressed: () {
               // Navigator.of(context).pop();
-              Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);
+              Navigator.popUntil(
+                  context, (Route<dynamic> predicate) => predicate.isFirst);
             },
             child: const Text("Close"),
           )
@@ -102,9 +102,9 @@ Widget buildTxtField(String labelText,
               borderRadius: BorderRadius.circular(5.5),
             ),
             hintText: labelText,
-            hintStyle: const TextStyle(color: Colors.blue),
+            hintStyle: const TextStyle(color: Colors.black),
             filled: true,
-            fillColor: Colors.blue[50],
+            // fillColor: Colors.blue[50],
           ),
         ),
       ),

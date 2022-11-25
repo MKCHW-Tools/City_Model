@@ -15,7 +15,7 @@ class FirebaseAuthentication {
       ConfirmationResult confirmationResult = await auth.signInWithPhoneNumber(
         '+$phoneNumber',
       );
-      printMessage("OTP Sent to +256 $phoneNumber");
+      printMessage("OTP Sent to $phoneNumber");
 
       return confirmationResult;
     } catch (e) {
