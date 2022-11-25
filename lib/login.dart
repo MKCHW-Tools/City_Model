@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Container(
               child: Text('Please sign in to make an appointment'),
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(12),
             ),
             // const SizedBox(height: 8),
             // Text('phone number'),
@@ -121,11 +121,12 @@ class _LoginPageState extends State<LoginPage> {
                 borderSide: const BorderSide(color: Colors.transparent),
                 borderRadius: BorderRadius.circular(5.5),
               ),
-              prefixIcon: Icon(prefixIcons, color: Colors.blue),
+              prefixIcon: Icon(prefixIcons, color: Colors.black),
               hintText: labelText,
-              hintStyle: const TextStyle(color: Colors.blue),
+              hintStyle: const TextStyle(color: Colors.black),
               filled: true,
-              fillColor: Colors.blue[50],
+
+              // fillColor: Colors.blue[50],
             ),
           ),
         ),
