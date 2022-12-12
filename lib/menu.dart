@@ -22,114 +22,125 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       appBar: AppBar(title: Text("${widget.facilityDocument['name']}'s Page")),
       body: Center(
-        child: Column(
-          children: [
-            Container(height: 15),
+          child: CustomScrollView(
+        physics: BouncingScrollPhysics(),
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Column(
+                children: [
+                  Container(height: 15),
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      widget.facilityDocument['description'],
+                      style: TextStyle(fontSize: 22),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 4, 0, 18),
+                    child: FutureBuilder<String>(
+                        future: FirebaseStorage.instance
+                            .refFromURL(widget.facilityDocument['image'])
+                            .getDownloadURL(),
+                        builder: (((context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Image.network(snapshot.data!);
+                          } else {
+                            return SizedBox(child: Text('Loading...'));
+                          }
+                        }))),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      'Menu',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ),
+                ],
+              )
+            ]),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
             Container(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                widget.facilityDocument['description'],
-                style: TextStyle(fontSize: 22),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 4, 0, 18),
-              child: FutureBuilder<String>(
-                  future: FirebaseStorage.instance
-                      .refFromURL(widget.facilityDocument['image'])
-                      .getDownloadURL(),
-                  builder: (((context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Image.network(snapshot.data!);
-                    } else {
-                      return SizedBox(child: Text('Loading...'));
-                    }
-                  }))),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                'Menu',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-            Expanded(
-                child: FutureBuilder<QuerySnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('menus')
-                  .where('facility_id', isEqualTo: widget.facilityDocument.id)
-                  .orderBy('price')
-                  .get(),
-              // future: FirebaseFirestore.instance.collection('menus').get(),
-              builder: (context, snapshot) {
-                print(snapshot);
-                if (snapshot.hasData) {
-                  final List<DocumentSnapshot> documents = snapshot.data!.docs;
-                  return ListView(
-                    children: documents.map((document) {
-                      return Container(
-                          width: 400,
-                          child: Card(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 100, vertical: 10),
-                            child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    leading: Container(
-                                      margin: EdgeInsets.only(left: 10, top: 6),
-                                      child: Icon(Icons.assignment)
+              child: FutureBuilder<QuerySnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('menus')
+                    .where('facility_id', isEqualTo: widget.facilityDocument.id)
+                    .orderBy('price')
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final List<DocumentSnapshot> documents =
+                        snapshot.data!.docs;
+                    return Column(
+                      children: documents.map((document) {
+                        return Container(
+                            width: 800,
+                            child: Card(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 10),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      leading: Container(
+                                          margin:
+                                              EdgeInsets.only(left: 10, top: 6),
+                                          child: Icon(Icons.assignment)),
+                                      title: Text(document['title']),
+                                      subtitle: Text(document['description']),
                                     ),
-                                    title: Text(document['title']),
-                                    subtitle: Text(document['description']),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                          child: Row(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.only(left: 14),
-                                            child: Text('Price: ${document['price']} UGX')
-                                          )
-                                        ],
-                                      )),
-                                      TextButton(
-                                        child: Text('Call Now →'),
-                                        onPressed: () async {
-                                          await FirebaseAnalytics.instance
-                                              .logSelectContent(
-                                                  contentType: 'menu',
-                                                  itemId: document.id);
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                            child: Row(
+                                          children: [
+                                            Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 14),
+                                                child: Text(
+                                                    'Price: ${document['price']} UGX'))
+                                          ],
+                                        )),
+                                        TextButton(
+                                          child: Text('Call Now →'),
+                                          onPressed: () async {
+                                            await FirebaseAnalytics.instance
+                                                .logSelectContent(
+                                                    contentType: 'menu',
+                                                    itemId: document.id);
 
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                              // 引数からユーザー情報を渡す
-                                              return LoginPage(document.id,
-                                                  widget.facilityDocument.id);
-                                            }),
-                                          );
-
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ]),
-                          ));
-                    }).toList(),
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                                // 引数からユーザー情報を渡す
+                                                return LoginPage(document.id,
+                                                    widget.facilityDocument.id);
+                                              }),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  ]),
+                            ));
+                      }).toList(),
+                    );
+                  }
+                  return Center(
+                    child: Text('Loading...'),
                   );
-                }
-                return Center(
-                  child: Text('Loading...'),
-                );
-              },
-            )),
-          ],
-        ),
-      ),
+                },
+              ),
+            ),
+          ])),
+        ],
+      )),
     );
   }
 
