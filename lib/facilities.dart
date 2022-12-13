@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -28,8 +29,10 @@ class _FacilityPageState extends State<FacilityPage> {
         body: Column(
           children: [
             Container(
-                margin: EdgeInsets.fromLTRB(100, 10, 100, 0),
+                margin: EdgeInsets.fromLTRB(min(100, MediaQuery.of(context).size.width * 0.05), 10,
+                                            min(100, MediaQuery.of(context).size.width * 0.05), 0),
                 padding: EdgeInsets.all(8),
+                constraints: BoxConstraints(maxWidth: 800),
                 child: FutureBuilder<String>(
                     future: FirebaseStorage.instance
                         .refFromURL(
@@ -57,12 +60,13 @@ class _FacilityPageState extends State<FacilityPage> {
                         snapshot.data!.docs;
                     // 取得した投稿メッセージ一覧を元にリスト表示
                     return ResponsiveGridView.builder(
+                        padding: EdgeInsets.all(8.0),
                         itemCount: documents.length,
                         // shrinkWrap: false,
                         gridDelegate: const ResponsiveGridDelegate(
                             crossAxisSpacing: 50,
                             mainAxisSpacing: 50,
-                            minCrossAxisExtent: 250),
+                            minCrossAxisExtent: 250,),
                         itemBuilder: (BuildContext context, int index) {
                           final document = documents[index];
                           return Container(
@@ -72,7 +76,6 @@ class _FacilityPageState extends State<FacilityPage> {
                                         .logSelectContent(
                                             contentType: 'facility',
                                             itemId: document.id);
-                                    print('switch to menu page');
                                     Navigator.of(context).push(
                                       MaterialPageRoute(builder: (context) {
                                         // 引数からユーザー情報を渡す
@@ -85,6 +88,7 @@ class _FacilityPageState extends State<FacilityPage> {
                                       child: Column(
                                     children: [
                                       Container(
+                                          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                                           child: FutureBuilder<String>(
                                         future: FirebaseStorage.instance
                                             .refFromURL(document['image'])
@@ -95,7 +99,10 @@ class _FacilityPageState extends State<FacilityPage> {
                                                 snapshot.data!);
                                           } else {
                                             return SizedBox(
-                                                child: Text('Loading'));
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Text('Loading...')
+                                                ));
                                           }
                                         },
                                       )),
@@ -105,13 +112,14 @@ class _FacilityPageState extends State<FacilityPage> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18,
                                               ))),
-                                      Wrap(
+                                      Container(
+                                        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                        child: Wrap(
                                           children: <Widget>[
                                                 Container(
                                                     child: Text('Speciality: '),
                                                     padding:
-                                                        const EdgeInsets.all(
-                                                            8.0))
+                                                        const EdgeInsets.symmetric(vertical: 2, horizontal: 4))
                                               ] +
                                               document['services']
                                                   .entries
@@ -120,13 +128,12 @@ class _FacilityPageState extends State<FacilityPage> {
                                                   return Container(
                                                     child: Text(e.key),
                                                     padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
+                                                    const EdgeInsets.symmetric(vertical: 2, horizontal: 4)
                                                   );
                                                 } else {
                                                   return SizedBox();
                                                 }
-                                              }).toList()),
+                                              }).toList())),
                                     ],
                                   ))));
                         });
