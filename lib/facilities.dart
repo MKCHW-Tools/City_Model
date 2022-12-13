@@ -1,7 +1,9 @@
 import 'dart:html';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -27,21 +29,22 @@ class _FacilityPageState extends State<FacilityPage> {
         body: Column(
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(100, 10, 100, 0),
-              padding: EdgeInsets.all(8),
-              child: FutureBuilder<String>(
-                  future: FirebaseStorage.instance
-                      .refFromURL("gs://mobiklinic-city-demo.appspot.com/top.png")
-                      .getDownloadURL(),
-                  builder: ((context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Image.network(
-                          snapshot.data!);
-                    } else {
-                      return SizedBox();
-                    }
-                  }))
-            ),
+                margin: EdgeInsets.fromLTRB(min(100, MediaQuery.of(context).size.width * 0.05), 10,
+                                            min(100, MediaQuery.of(context).size.width * 0.05), 0),
+                padding: EdgeInsets.all(8),
+                constraints: BoxConstraints(maxWidth: 800),
+                child: FutureBuilder<String>(
+                    future: FirebaseStorage.instance
+                        .refFromURL(
+                            "gs://mobiklinic-city-demo.appspot.com/top.png")
+                        .getDownloadURL(),
+                    builder: ((context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Image.network(snapshot.data!);
+                      } else {
+                        return SizedBox();
+                      }
+                    }))),
             Expanded(
               // FutureBuilder
               // 非同期処理の結果を元にWidgetを作れる
@@ -56,67 +59,67 @@ class _FacilityPageState extends State<FacilityPage> {
                     final List<DocumentSnapshot> documents =
                         snapshot.data!.docs;
                     // 取得した投稿メッセージ一覧を元にリスト表示
-                    return ListView(
-                      children: documents.map((document) {
-                        return Card(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 100, vertical: 10),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ListTile(
-                                  leading: Container(
-                                      child: Container(
-                                    child: FutureBuilder<String>(
+                    return ResponsiveGridView.builder(
+                        padding: EdgeInsets.all(8.0),
+                        itemCount: documents.length,
+                        // shrinkWrap: false,
+                        gridDelegate: const ResponsiveGridDelegate(
+                            crossAxisSpacing: 50,
+                            mainAxisSpacing: 50,
+                            minCrossAxisExtent: 250,),
+                        itemBuilder: (BuildContext context, int index) {
+                          final document = documents[index];
+                          return Container(
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    await FirebaseAnalytics.instance
+                                        .logSelectContent(
+                                            contentType: 'facility',
+                                            itemId: document.id);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                        // 引数からユーザー情報を渡す
+                                        return MenuPage(document);
+                                      }),
+                                    );
+                                    // _reserveNotification();
+                                  },
+                                  child: Card(
+                                      child: Column(
+                                    children: [
+                                      Container(
+                                          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                          child: FutureBuilder<String>(
                                         future: FirebaseStorage.instance
                                             .refFromURL(document['image'])
                                             .getDownloadURL(),
-                                        builder: ((context, snapshot) {
-                                          print(snapshot);
+                                        builder: (context, snapshot) {
                                           if (snapshot.hasData) {
                                             return Image.network(
                                                 snapshot.data!);
                                           } else {
                                             return SizedBox(
-                                                child: Text('Loading...'));
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Text('Loading...')
+                                                ));
                                           }
-                                        })),
-                                  )
-
-                                      // Image.network(
-                                      //     'gs://mobiklinic-city-demo.appspot.com/f4329a_f5ac6ffc0a7341208cdc84b0e70cb07f_mv2.jpeg'),
-
-                                      // width: 200,
-                                      // height: 200,
-                                      ),
-
-                                  // Icon(Icons.local_hospital),
-                                  title: Text(document['name']),
-                                  subtitle: Text(document['description']),
-                                  trailing: RatingBarIndicator(
-                                    rating: document['ratings']['average'],
-                                    itemBuilder: (context, index) => Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    itemCount: 5,
-                                    itemSize: 30.0,
-                                    direction: Axis.horizontal,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: Row(
+                                        },
+                                      )),
+                                      Container(
+                                          child: Text(document['name'],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                              ))),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                        child: Wrap(
                                           children: <Widget>[
                                                 Container(
                                                     child: Text('Speciality: '),
                                                     padding:
-                                                        const EdgeInsets.all(
-                                                            8.0))
+                                                        const EdgeInsets.symmetric(vertical: 2, horizontal: 4))
                                               ] +
                                               document['services']
                                                   .entries
@@ -125,37 +128,15 @@ class _FacilityPageState extends State<FacilityPage> {
                                                   return Container(
                                                     child: Text(e.key),
                                                     padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
+                                                    const EdgeInsets.symmetric(vertical: 2, horizontal: 4)
                                                   );
                                                 } else {
                                                   return SizedBox();
                                                 }
-                                              }).toList()),
-                                    ),
-                                    TextButton(
-                                      child: const Text('Look Menu →'),
-                                      onPressed: () async {
-                                        await FirebaseAnalytics.instance
-                                            .logSelectContent(
-                                                contentType: 'facility',
-                                                itemId: document.id);
-                                        print('switch to menu page');
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (context) {
-                                            // 引数からユーザー情報を渡す
-                                            return MenuPage(document);
-                                          }),
-                                        );
-                                        // _reserveNotification();
-                                      },
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ));
-                      }).toList(),
-                    );
+                                              }).toList())),
+                                    ],
+                                  ))));
+                        });
                   }
                   // データが読込中の場合
                   return Center(
